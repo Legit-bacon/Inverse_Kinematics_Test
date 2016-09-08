@@ -26,7 +26,9 @@ void setup(){
 }
 
 void draw(){
- move();
+ //move();
+ legX = mouseX;
+ legY = mouseY;
  IK();
  
  background(200);
@@ -44,27 +46,15 @@ void draw(){
  
  
  textSize(18);
- float a = atan2(lowArmPos.y - midArmPos.y, lowArmPos.x - midArmPos.x);
+ line(200, 150, 200-(lowArmPos.x - midArmPos.x), 150-(lowArmPos.y - midArmPos.y));
+ float a = degrees(atan2(lowArmPos.y - midArmPos.y, lowArmPos.x - midArmPos.x));
  text(a, 5, 15);
- float a2 = atan2(midArmPos.y - upArmPos.y, midArmPos.x - upArmPos.x);
- if(a2 < 0){
-   a2 = a2 - a;
- }
- else{
-   a2 = a2 + a;
- }
- text(a2, 5, 30);
  
- float a3 = atan2(lowArmPos1.y - midArmPos1.y, lowArmPos1.x - midArmPos1.x);
- text(a3, 5, 45);
- float a4 = atan2(midArmPos1.y - upArmPos1.y, midArmPos1.x - upArmPos1.x);
- if(a2 < 0){
-   a4 = a4 - a3;
- }
- else{
-   a4 = a4 + a3;
- }
- text(a4, 5, 60);
+ line(300, 150, 300-(midArmPos.x - upArmPos.x), 150-(midArmPos.y - upArmPos.y));
+ float a2 = degrees(atan2(midArmPos.y - upArmPos.y, midArmPos.x - upArmPos.x));
+ //a2 = (180 - a) + a2;
+ text(a2, 5, 30);
+
  
 }
 
