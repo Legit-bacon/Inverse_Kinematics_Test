@@ -2,11 +2,11 @@
 
 PVector upArmPos, midArmPos, lowArmPos;
 PVector halfPos, halfVec;
-float targetX, targetY;
-float leg0TargetX, leg0TargetY, leg1TargetX, leg1TargetY;
+public float targetX, targetY;
+public float leg0TargetX, leg0TargetY, leg1TargetX, leg1TargetY;
 
-IK leg0 = new IK(0, width*0.25, 0);
-IK leg1 = new IK(1, width*0.75, 0);
+IK leg0 = new IK(0, 500*0.25, 0);
+IK leg1 = new IK(1, 500*0.75, 0);
 
 void setup(){
   size(500, 300);
@@ -24,7 +24,7 @@ void draw(){
  move();
  background(200);
  leg0.update();
-// leg1.update();
+ leg1.update();
 
 
 
@@ -57,15 +57,23 @@ leg1TargetY = mouseY;
 }
 
 class IK{
-  
-  IK (int legNo, float legX, float legY){
+  float legX, legY;
+  int legNo;
+  IK (int lN, float lX, float lY){
+    legX = lX;
+    legY = lY;
+    legNo = lN;
+  }
+
+  void update(){
+    
     if(legNo == 0){
-      leg0TargetX = targetX;
-      leg0TargetY = targetY;
+     targetX =leg0TargetX;
+     targetY = leg0TargetY; 
     }
     else if(legNo == 1){
-      leg1TargetX = targetX;
-      leg1TargetY = targetY;
+     targetX =leg1TargetX;
+     targetY = leg1TargetY;
     }
     else if(legNo == 2){
       
@@ -73,12 +81,11 @@ class IK{
     else if(legNo == 3){
       
     } 
+    
+    upArmPos.set(targetX, targetY);
+    lowArmPos.set(legX, legY);
     println(targetX);
-   // upArmPos.set(targetX, targetY);
-  //  lowArmPos.set(legX, legY);
-  }
-
-  void update(){
+    
      halfPos = PVector.add(lowArmPos, upArmPos);
      halfPos.div(2);
  
