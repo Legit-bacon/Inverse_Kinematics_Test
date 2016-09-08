@@ -1,116 +1,100 @@
 //Now with 100% more GIT!!
 
-PVector upArmPos, midArmPos, lowArmPos, upArmPos1, midArmPos1, lowArmPos1;
-PVector upArmVec, midArmVec, lowArmVec, upArmVec1, midArmVec1, lowArmVec1;
-
-float legX = 150;
-float legY = 100;
-boolean legDir = false;
-float millisOld, gTime, gSpeed = 4;
-
+PVector upArmPos, midArmPos, lowArmPos;
 PVector halfPos, halfVec;
+float targetX, targetY;
+float leg0TargetX, leg0TargetY, leg1TargetX, leg1TargetY;
+
+IK leg0 = new IK(0, width*0.25, 0);
+IK leg1 = new IK(1, width*0.75, 0);
+
 void setup(){
-  size(500, 300, OPENGL);
+  size(500, 300);
+  frameRate(60);
+  smooth();
   
-  lowArmPos = new PVector(width*0.25, 0);
+  lowArmPos = new PVector(0, 0);
   midArmPos = new PVector(0, 0);
   upArmPos = new PVector(0, 0);
   halfPos = new PVector(0, 0);
   halfVec = new PVector(150, 0);
-  
-  lowArmPos1 = new PVector(width*0.75, 0);
-  midArmPos1 = new PVector(0, 0);
-  upArmPos1 = new PVector(0, 0);
-
-
 }
 
 void draw(){
- //move();
- legX = mouseX;
- legY = mouseY;
- IK();
- 
+ move();
  background(200);
- stroke(0);
- line(lowArmPos.x, lowArmPos.y, midArmPos.x, midArmPos.y);
- line(midArmPos.x, midArmPos.y, upArmPos.x, upArmPos.y);
- stroke(255, 0, 0);
- line(lowArmPos.x, lowArmPos.y, upArmPos.x, upArmPos.y);
- line(midArmPos.x, midArmPos.y, halfPos.x, halfPos.y);
- 
- stroke(0);
- line(lowArmPos1.x, lowArmPos1.y, midArmPos1.x, midArmPos1.y);
- line(midArmPos1.x, midArmPos1.y, upArmPos1.x, upArmPos1.y);
+ leg0.update();
+// leg1.update();
 
- 
- 
- textSize(18);
- line(200, 150, 200-(lowArmPos.x - midArmPos.x), 150-(lowArmPos.y - midArmPos.y));
+
+
+ /*textSize(18);
  float a = degrees(atan2(lowArmPos.y - midArmPos.y, lowArmPos.x - midArmPos.x));
+ a = map(a, 0, -180, 0, 180);
  text(a, 5, 15);
  
- line(300, 150, 300-(midArmPos.x - upArmPos.x), 150-(midArmPos.y - upArmPos.y));
  float a2 = degrees(atan2(midArmPos.y - upArmPos.y, midArmPos.x - upArmPos.x));
- //a2 = (180 - a) + a2;
- text(a2, 5, 30);
+ if(a2 > 0){
+ a2 = map(a2, 0, 180, 180, 0);
+ }
+ else{
+  a2 = map(a2, 0, -180, -180, 0); 
+ }
+ a2 =  a - a2;
+ text(a2, 5, 30);*/
 
  
 }
 
 void move(){
- if(legX < (width*0.25)-50){
-   legDir = true;
- }
- if(legX > (width*0.25)+50){
-   legDir = false;
- }
+leg0TargetX = mouseX;
+leg0TargetY = mouseY;
  
- if(legDir == true){
-  legX++ ;
- }
- if(legDir == false){
-  legX--;
- }
+leg1TargetX = mouseX;
+leg1TargetY = mouseY;
  //println(legX);
  //println(legY);
-  
 }
 
-void IK(){
- upArmPos.set(legX, legY);
- 
- halfPos = PVector.add(lowArmPos, upArmPos);
- halfPos.div(2);
- 
- float d = halfPos.dist(upArmPos);
- float Length = sqrt(100*100 - d*d);
- 
- float a = atan2(lowArmPos.y - upArmPos.y, lowArmPos.x - upArmPos.x);
- a = a+(PI/2);
+class IK{
   
- float offsetX =  Length*(cos(a));
- float offsetY =  Length*(sin(a));
+  IK (int legNo, float legX, float legY){
+    if(legNo == 0){
+      leg0TargetX = targetX;
+      leg0TargetY = targetY;
+    }
+    else if(legNo == 1){
+      leg1TargetX = targetX;
+      leg1TargetY = targetY;
+    }
+    else if(legNo == 2){
+      
+    }
+    else if(legNo == 3){
+      
+    } 
+    println(targetX);
+   // upArmPos.set(targetX, targetY);
+  //  lowArmPos.set(legX, legY);
+  }
+
+  void update(){
+     halfPos = PVector.add(lowArmPos, upArmPos);
+     halfPos.div(2);
  
- midArmPos.set(halfPos.x-offsetX, halfPos.y-offsetY);
+     float d = halfPos.dist(upArmPos);
+     float Length = sqrt(100*100 - d*d);
  
- 
- upArmPos1.set(width-legX, legY);
- 
- halfPos = PVector.add(lowArmPos1, upArmPos1);
- halfPos.div(2);
- 
- d = halfPos.dist(upArmPos1);
- Length = sqrt(100*100 - d*d);
- 
- a = atan2(lowArmPos1.y - upArmPos1.y, lowArmPos1.x - upArmPos1.x);
- a = a+(PI/2);
+     float a = atan2(lowArmPos.y - upArmPos.y, lowArmPos.x - upArmPos.x);
+     a = a+(PI/2);
   
- offsetX =  Length*(cos(a));
- offsetY =  Length*(sin(a));
+     float offsetX =  Length*(cos(a));
+     float offsetY =  Length*(sin(a));
  
- midArmPos1.set(halfPos.x-offsetX, halfPos.y-offsetY);
- 
- 
- //test hahahahaah
+     midArmPos.set(halfPos.x-offsetX, halfPos.y-offsetY);
+     
+      stroke(0);
+      line(lowArmPos.x, lowArmPos.y, midArmPos.x, midArmPos.y);
+      line(midArmPos.x, midArmPos.y, upArmPos.x, upArmPos.y);
+  }
 }
