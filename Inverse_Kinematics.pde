@@ -1,68 +1,25 @@
 
 class IK{
-  float legX, legY;
+  float legX, legY, legZ;
   int legNo;
-  IK (int lN, float lX, float lY){
+  IK (int lN, float lX, float lY, float lZ){
     legX = lX;
     legY = lY;
+    legZ = lZ;
     legNo = lN;
   }
 
   void update(){
     
     if(legNo == 0){
-     targetX =leg0TargetX;
+     targetX = leg0TargetX;
      targetY = leg0TargetY; 
-     
-     a1 = constrain(a1, 0, 90);
-     servo1 = int(map(a1,0,90,0,250));
-     myPort.write(0xFF);
-     myPort.write(0x00); 
-     servo_bytes = new byte[2];
-     servo_bytes[0] = (byte(servo1));
-     servo_bytes[1] = (byte(servo1>>7));
-     myPort.write(servo_bytes);
-     myPort.write(0x7F);
-     
-     a2 = a2-30;
-     a2 = constrain(a2, 0, 90);
-     servo2 = int(map(a2,0,90,0,250));
-     myPort.write(0xFF);
-     myPort.write(0x01); 
-     servo_bytes = new byte[2];
-     servo_bytes[0] = (byte(servo2));
-     servo_bytes[1] = (byte(servo2>>7));
-     myPort.write(servo_bytes);
-     myPort.write(0x7F);
-
+     targetZ = leg0TargetZ;
     }
     else if(legNo == 1){
-     targetX =leg1TargetX;
+     targetX = leg1TargetX;
      targetY = leg1TargetY;
-     
-     a1 = constrain(a1, 0, 90);
-     servo1 = int(map(a1,0,90,0,250));
-     myPort.write(0xFF);
-     myPort.write(0x03); 
-     servo_bytes = new byte[2];
-     servo_bytes[0] = (byte(servo1));
-     servo_bytes[1] = (byte(servo1>>7));
-     myPort.write(servo_bytes);
-     myPort.write(0x7F);
-     
-     a2 = a2-30;
-     a2 = constrain(a2, 0, 90);
-     servo2 = int(map(a2,0,90,0,250));
-     myPort.write(0xFF);
-     myPort.write(0x04); 
-     servo_bytes = new byte[2];
-     servo_bytes[0] = (byte(servo2));
-     servo_bytes[1] = (byte(servo2>>7));
-     myPort.write(servo_bytes);
-     myPort.write(0x7F);
-
-     
-
+     targetZ = leg1TargetZ;
     }
     else if(legNo == 2){
       
@@ -71,8 +28,15 @@ class IK{
       
     } 
     
-    upArmPos.set(targetX, targetY);
-    lowArmPos.set(legX, legY);
+    upArmPos.set(targetX, targetY, targetZ);
+    lowArmPos.set(legX, legY, legZ);
+    
+    
+    float d0 = upArmPos.dist(lowArmPos);
+    float d1 = dist(legX, legY, targetX, targetY);
+    println(d0-d1);
+    upArmPos.set(targetX, (targetY + (d0-d1)), legZ);
+    
     
      halfPos = PVector.add(lowArmPos, upArmPos);
      halfPos.div(2);
@@ -85,6 +49,7 @@ class IK{
   
      float offsetX =  Length*(cos(a));
      float offsetY =  Length*(sin(a));
+     //float offsetZ = 
  
      midArmPos.set(halfPos.x-offsetX, halfPos.y-offsetY);
      
@@ -106,6 +71,74 @@ class IK{
      }
      a2 =  a1 - a2;
      text(a2, legX, legY+30); 
+     
+     a3 = degrees(atan(targetZ/targetY));
+     text(a3, legX, legY+45);
+     
+          
+     a1 = constrain(a1, 0, 90);
+     servo1 = int(map(a1,0,90,0,250));
+     myPort.write(0xFF);
+     if(legNo == 0){  
+       myPort.write(0x00); 
+     }
+     else if(legNo == 1){
+       myPort.write(0x03);
+     }
+     else if(legNo == 2){
+       myPort.write(0x06);
+     }
+     else if(legNo == 3){
+       myPort.write(0x09);
+     }
+     servo_bytes = new byte[2];
+     servo_bytes[0] = (byte(servo1));
+     servo_bytes[1] = (byte(servo1>>7));
+     myPort.write(servo_bytes);
+     myPort.write(0x7F);
+     
+     a2 = a2-30;
+     a2 = constrain(a2, 0, 90);
+     servo2 = int(map(a2,0,90,0,250));
+     myPort.write(0xFF);
+     if(legNo == 0){  
+       myPort.write(0x01); 
+     }
+     else if(legNo == 1){
+       myPort.write(0x04);
+     }
+     else if(legNo == 2){
+       myPort.write(0x07);
+     }
+     else if(legNo == 3){
+       myPort.write(0x10);
+     } 
+     servo_bytes = new byte[2];
+     servo_bytes[0] = (byte(servo2));
+     servo_bytes[1] = (byte(servo2>>7));
+     myPort.write(servo_bytes);
+     myPort.write(0x7F);
+     
+     a3 = a3 + 30;
+     servo3 = int(map(a3,0,90,0,250));
+     myPort.write(0xFF);
+     if(legNo == 0){  
+       myPort.write(0x02); 
+     }
+     else if(legNo == 1){
+       myPort.write(0x05);
+     }
+     else if(legNo == 2){
+       myPort.write(0x08);
+     }
+     else if(legNo == 3){
+       myPort.write(0x11);
+     }  
+     servo_bytes = new byte[2];
+     servo_bytes[0] = (byte(servo3));
+     servo_bytes[1] = (byte(servo3>>7));
+     myPort.write(servo_bytes);
+     myPort.write(0x7F);
   }
   
 }
