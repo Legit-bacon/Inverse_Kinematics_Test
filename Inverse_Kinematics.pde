@@ -13,7 +13,7 @@ class IK{
     
     if(legNo == 0){
      targetX = leg0TargetX;
-     targetY = leg0TargetY; 
+     targetY = leg0TargetY;
      targetZ = leg0TargetZ;
     }
     else if(legNo == 1){
@@ -34,7 +34,6 @@ class IK{
     
     float d0 = upArmPos.dist(lowArmPos);
     float d1 = dist(legX, legY, targetX, targetY);
-    println(d0-d1);
     upArmPos.set(targetX, (targetY + (d0-d1)), legZ);
     
     
@@ -53,14 +52,24 @@ class IK{
  
      midArmPos.set(halfPos.x-offsetX, halfPos.y-offsetY);
      
-     stroke(0);
-     line(lowArmPos.x, lowArmPos.y, midArmPos.x, midArmPos.y);
-     line(midArmPos.x, midArmPos.y, upArmPos.x, upArmPos.y);
+     stroke(255);
+     noFill();
+     
+     rotateX(atan(targetZ/targetY));
+     beginShape();
+     vertex(lowArmPos.x, lowArmPos.y, lowArmPos.z);
+     vertex(midArmPos.x, midArmPos.y, midArmPos.z);
+     vertex(upArmPos.x, upArmPos.y, upArmPos.z);
+     endShape();
+     
+     //stroke(0);
+     //line(lowArmPos.x, lowArmPos.y, midArmPos.x, midArmPos.y);
+     //line(midArmPos.x, midArmPos.y, upArmPos.x, upArmPos.y);
      
      textSize(18);
      a1 = degrees(atan2(lowArmPos.y - midArmPos.y, lowArmPos.x - midArmPos.x));
      a1 = map(a1, 0, -180, 0, 180);
-     text(a1, legX, legY+15);
+     text(a1, legX, legY+15, legZ);
  
      a2 = degrees(atan2(midArmPos.y - upArmPos.y, midArmPos.x - upArmPos.x));
      if(a2 > 0){
@@ -70,10 +79,10 @@ class IK{
        a2 = map(a2, 0, -180, -180, 0); 
      }
      a2 =  a1 - a2;
-     text(a2, legX, legY+30); 
+     text(a2, legX, legY+30, legZ); 
      
      a3 = degrees(atan(targetZ/targetY));
-     text(a3, legX, legY+45);
+     text(a3, legX, legY+45, legZ);
      
           
      a1 = constrain(a1, 0, 90);

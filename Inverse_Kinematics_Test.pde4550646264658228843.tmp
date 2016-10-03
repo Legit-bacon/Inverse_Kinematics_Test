@@ -20,10 +20,7 @@ IK Leg1 = new IK(1, 450*0.75, 0, 0);      //FIX Z ISSUE!!!
 //leg2
 //leg3
 
-Gait Gait0 = new Gait(0, -60, -115);
-Gait Gait1 = new Gait(1, -60, 115);
-Gait Gait2 = new Gait(2, 60, 115);
-Gait Gait3 = new Gait(3, 60, -115);
+Gait Gait1 = new Gait(60, 115);
 
 void setup(){
   size(450, 450, P3D);
@@ -52,8 +49,7 @@ void setup(){
 }
 
 void draw(){
-  Gait0.update();
-  Gait1.update();
+ Gait();
   background(0);
   lights();
 
