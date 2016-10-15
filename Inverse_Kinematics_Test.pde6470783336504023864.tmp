@@ -7,7 +7,7 @@ import processing.serial.*;
 Serial myPort;
 
 int servo1, servo2, servo3;
-byte[] servo_bytes1, servo_bytes2, servo_bytes3;
+byte[] servo_bytes;
 
 import org.gamecontrolplus.gui.*;
 import org.gamecontrolplus.*;
@@ -63,18 +63,18 @@ void setup(){
   halfPos = new PVector(0, 0, 0);
   halfVec = new PVector(150, 0, 0);
   
-  myPort = new Serial(this, "COM10", 115200, 'N', 8, 2.0);
+  /* myPort = new Serial(this, "COM4", 115200, 'N', 8, 2.0);
    myPort.write(0xAA);
    myPort.write(0x0C); 
    myPort.write(0x04);  
    myPort.write(0x00); 
    myPort.write(0x70); 
-   myPort.write(0x2E);
+   myPort.write(0x2E); */
   
 }
 
 void draw(){
-  forwardsSpeed = map(gpad.getSlider("YPOS").getValue(), 1, -1, 0.005, -0.005);
+  forwardsSpeed = map(gpad.getSlider("YPOS").getValue(), 1, -1, 0.0025, -0.0025);
   turnSpeed = map(gpad.getSlider("XPOS").getValue(), 1, -1, 60, -60);
   
   Gait0.update();

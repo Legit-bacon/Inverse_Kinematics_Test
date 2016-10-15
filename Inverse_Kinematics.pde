@@ -22,10 +22,14 @@ class IK{
      targetZ = leg1TargetZ;
     }
     else if(legNo == 2){
-      
+     targetX = leg2TargetX;
+     targetY = leg2TargetY;
+     targetZ = leg2TargetZ;
     }
     else if(legNo == 3){
-      
+     targetX = leg3TargetX;
+     targetY = leg3TargetY;
+     targetZ = leg3TargetZ;
     } 
     
     upArmPos.set(targetX, targetY, targetZ);
@@ -50,17 +54,27 @@ class IK{
      float offsetY =  Length*(sin(a));
      //float offsetZ = 
  
-     midArmPos.set(halfPos.x-offsetX, halfPos.y-offsetY);
+     midArmPos.set(halfPos.x-offsetX, halfPos.y-offsetY, legZ);
      
      stroke(255);
      noFill();
      
-     rotateX(atan(targetZ/targetY));
+
+     /*beginShape();
+     vertex(targetX, targetY, targetZ);
+     vertex(legX, legY, legZ);
+     vertex(targetX, targetY, targetZ);
+     endShape();*/
+     
+     pushMatrix();
+     rotateX(atan((targetZ-legZ)/targetY));
+     translate(0, (legZ*sin(atan((targetZ-legZ)/targetY))), 0);
      beginShape();
      vertex(lowArmPos.x, lowArmPos.y, lowArmPos.z);
      vertex(midArmPos.x, midArmPos.y, midArmPos.z);
      vertex(upArmPos.x, upArmPos.y, upArmPos.z);
      endShape();
+     popMatrix();
      
      //stroke(0);
      //line(lowArmPos.x, lowArmPos.y, midArmPos.x, midArmPos.y);
@@ -81,12 +95,12 @@ class IK{
      a2 =  a1 - a2;
      text(a2, legX, legY+30, legZ); 
      
-     a3 = degrees(atan(targetZ/targetY));
+     a3 = degrees(atan((targetZ-legZ)/targetY));
      text(a3, legX, legY+45, legZ);
      
-          
-     a1 = constrain(a1, 0, 90);
-     servo1 = int(map(a1,0,90,0,250));
+         
+     a1 = constrain(a1, 0, 120);
+     servo1 = int(map(a1,0,120,0,254));
      myPort.write(0xFF);
      if(legNo == 0){  
        myPort.write(0x00); 
@@ -100,15 +114,18 @@ class IK{
      else if(legNo == 3){
        myPort.write(0x09);
      }
-     servo_bytes = new byte[2];
-     servo_bytes[0] = (byte(servo1));
-     servo_bytes[1] = (byte(servo1>>7));
-     myPort.write(servo_bytes);
+     servo_bytes1 = new byte[2];
+     servo_bytes1[0] = (byte(servo1));
+     servo_bytes1[1] = (byte(servo1>>7));
+     myPort.write(servo_bytes1);
      myPort.write(0x7F);
      
-     a2 = a2-30;
-     a2 = constrain(a2, 0, 90);
-     servo2 = int(map(a2,0,90,0,250));
+     a2 = a2-30;                       // -30
+     a2 = constrain(a2, 0, 120);
+     println("servo2:");
+     println(a2);
+     println("");
+     servo2 = int(map(a2,0,120,0,254));
      myPort.write(0xFF);
      if(legNo == 0){  
        myPort.write(0x01); 
@@ -122,14 +139,17 @@ class IK{
      else if(legNo == 3){
        myPort.write(0x10);
      } 
-     servo_bytes = new byte[2];
-     servo_bytes[0] = (byte(servo2));
-     servo_bytes[1] = (byte(servo2>>7));
-     myPort.write(servo_bytes);
+     servo_bytes2 = new byte[2];
+     servo_bytes2[0] = (byte(servo2));
+     servo_bytes2[1] = (byte(servo2>>7));
+     myPort.write(servo_bytes2);
      myPort.write(0x7F);
      
      a3 = a3 + 30;
-     servo3 = int(map(a3,0,90,0,250));
+     println("servo3:");
+     println(a3);
+     println("");
+     servo3 = int(map(a3,0,120,0,254));
      myPort.write(0xFF);
      if(legNo == 0){  
        myPort.write(0x02); 
@@ -143,10 +163,10 @@ class IK{
      else if(legNo == 3){
        myPort.write(0x11);
      }  
-     servo_bytes = new byte[2];
-     servo_bytes[0] = (byte(servo3));
-     servo_bytes[1] = (byte(servo3>>7));
-     myPort.write(servo_bytes);
+     servo_bytes3 = new byte[2];
+     servo_bytes3[0] = (byte(servo3));
+     servo_bytes3[1] = (byte(servo3>>7));
+     myPort.write(servo_bytes3);
      myPort.write(0x7F);
   }
   
