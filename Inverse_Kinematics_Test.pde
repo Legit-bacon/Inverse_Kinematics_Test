@@ -40,7 +40,7 @@ Gait Gait3 = new Gait(3, 60, 115);
 
 void setup(){
   size(1280, 750, P3D);
-  frameRate(60);
+  frameRate(100);
   
   control = ControlIO.getInstance(this);
   // Find a device that matches the configuration file
@@ -74,7 +74,7 @@ void setup(){
 }
 
 void draw(){
-  forwardsSpeed = map(gpad.getSlider("YPOS").getValue(), 1, -1, 0.005, -0.005);
+  forwardsSpeed = map(gpad.getSlider("YPOS").getValue(), 1, -1, 0.01, -0.01);
   turnSpeed = map(gpad.getSlider("XPOS").getValue(), 1, -1, 60, -60);
   
   Gait0.update();

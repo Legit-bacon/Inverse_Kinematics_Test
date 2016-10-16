@@ -8,57 +8,135 @@ float l3 = 0;
 float speed = 0.001;
 
 class Gait{
-  int testInt;
-  float legNo, posX, posY, posZ, oriX, oriY;
+  public boolean legRetract= false;
+  int retractCount, retractAmount = 30, legZ = 150;
+  float legNo, posX, posY, posZ, oriX, oriY, retractX;
     Gait(float lN, float lX, float lY){
      legNo = lN;
      posX = lX;
      oriX = lX;
      posY = lY;
      oriY = lY;
-     posZ = 150;
-     testInt = 1;
+     posZ = legZ;
+     retractX = 0;
     }
   
   void update(){
     
-    l0 = l0-forwardsSpeed;
-    l1 = l1-forwardsSpeed;
-    l2 = l2-forwardsSpeed;
-    l3 = l3-forwardsSpeed;
-    if(l0 > 1){
-    l0 = 0;
-    } else if(l0 < 0){
-      l0 = 1;
+    if(legNo == 0){
+      l0 = l0-forwardsSpeed;
+      l1 = l1-forwardsSpeed;
+      l2 = l2-forwardsSpeed;
+      l3 = l3-forwardsSpeed;      
+    }
+    
+      if(l0 > 1){
+        if(legNo == 0){
+        retractX = 1;
+        l0 = 0;
+        legRetract = true;
+        }
+      } else if(l0 < 0){
+      if(legNo == 0){
+        retractX = 0;
+        l0 = 1;
+        legRetract = true;
+        }
       }
-    if(l1 > 1){
-    l1 = 0; 
-    } else if(l1 < 0){
-      l1 = 1;
+      if(l1 > 1){
+        if(legNo == 1){
+        retractX = 1;
+        l1 = 0; 
+        legRetract = true;
+        }
+      } else if(l1 < 0){
+        if(legNo == 1){
+        retractX = 0;
+        l1 = 1;
+        legRetract = true;
+        }
       }
-    if(l2 > 1){
-    l2 = 0; 
-    } else if(l2 < 0){
-      l2 = 1;
+      if(l2 > 1){
+        if(legNo == 2){
+        retractX = 1;
+        l2 = 0;
+        legRetract = true;
+        }
+      } else if(l2 < 0){
+        if(legNo == 2){
+        retractX = 0;
+        l2 = 1;
+        legRetract = true;
+        }
       }
-    if(l3 > 1){
-    l3 = 0; 
-    } else if(l3 < 0){
-      l3 = 1;
+      if(l3 > 1){
+        if(legNo == 3){
+        retractX = 1;
+        l3 = 0; 
+        legRetract = true;
+        }
+      } else if(l3 < 0){
+        if(legNo == 3){
+        retractX = 0;
+        l3 = 1;
+        legRetract = true;
+        }
       }
     
+    println(legRetract);
+    
     if(legNo == 0){
-    posY = oriY - map(l0, 0, 1, -115, 115);
-    }
+      if(legRetract == true && retractCount < 25){
+        posZ = legZ-retractAmount;
+        retractX += (l0-retractX)/10;
+        posY = oriY - map(retractX, 0, 1, -115, 115);
+        retractCount ++;
+      }else{
+          posY = oriY - map(l0, 0, 1, -115, 115);
+          legRetract = false;
+          retractCount = 0;
+          posZ = legZ;
+        }
+      }
     else if(legNo == 1){
-    posY = oriY - map(l1, 0, 1, -115, 115);
-    }
+    if(legRetract == true && retractCount < 25){
+        posZ = legZ-retractAmount;
+        retractX += (l1-retractX)/10;
+        posY = oriY - map(retractX, 0, 1, -115, 115);
+        retractCount ++;
+      }else{
+          posY = oriY - map(l1, 0, 1, -115, 115);
+          legRetract = false;
+          retractCount = 0;
+          posZ = legZ;
+        }
+      }
     else if(legNo == 2){
-    posY = oriY - map(l2, 0, 1, -115, 115);
-    }
+    if(legRetract == true && retractCount < 25){
+        posZ = legZ-retractAmount;
+        retractX += (l2-retractX)/10;
+        posY = oriY - map(retractX, 0, 1, -115, 115);
+        retractCount ++;
+      }else{
+          posY = oriY - map(l2, 0, 1, -115, 115);
+          legRetract = false;
+          retractCount = 0;
+          posZ = legZ;
+        }
+      }
     else if(legNo == 3){
-    posY = oriY - map(l3, 0, 1, -115, 115);
-    }
+    if(legRetract == true && retractCount < 25){
+        posZ = legZ-retractAmount;
+        retractX += (l3-retractX)/10;
+        posY = oriY - map(retractX, 0, 1, -115, 115);
+        retractCount ++;
+      }else{
+          posY = oriY - map(l3, 0, 1, -115, 115);
+          legRetract = false;
+          retractCount = 0;
+          posZ = legZ;
+        }
+      }
     
    float a;
    a = oriY - posY;

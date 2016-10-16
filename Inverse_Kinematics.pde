@@ -122,9 +122,6 @@ class IK{
      
      a2 = a2-30;                       // -30
      a2 = constrain(a2, 0, 120);
-     println("servo2:");
-     println(a2);
-     println("");
      servo2 = int(map(a2,0,120,0,254));
      myPort.write(0xFF);
      if(legNo == 0){  
@@ -146,9 +143,6 @@ class IK{
      myPort.write(0x7F);
      
      a3 = a3 + 30;
-     println("servo3:");
-     println(a3);
-     println("");
      servo3 = int(map(a3,0,120,0,254));
      myPort.write(0xFF);
      if(legNo == 0){  
